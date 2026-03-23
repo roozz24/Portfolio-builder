@@ -1,0 +1,44 @@
+const defaultPortfolio = {
+  id: "",
+  title: "My Portfolio",
+  theme: {
+    mode: "light",
+    primaryColor: "#000000"
+  },
+  sections: [
+    {
+      id: "hero-1",
+      type: "hero",
+      data: {
+        name: "Your Name",
+        title: "React Developer",
+        tagline: "I build clean UI"
+      }
+    },
+    {
+      id: "about-1",
+      type: "about",
+      data: {
+        description: "Write about yourself"
+      }
+    },
+    {
+      id: "projects-1",
+      type: "projects",
+      data: [
+        {
+          title: "Project 1",
+          description: "Something cool",
+          link: ""
+        }
+      ]
+    },
+    {
+      id: "skills-1",
+      type: "skills",
+      data: ["React", "JavaScript"]
+    }
+  ]
+};
+
+export default defaultPortfolio;
