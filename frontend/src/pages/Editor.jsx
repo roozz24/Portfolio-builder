@@ -133,6 +133,23 @@ function Editor() {
 
               </div>
             ))}
+            <button
+              onClick={() => {
+                const newProjects = [
+                  ...projects,
+                  { title: "", description: "", link: "" }
+                ];
+                setProjects(newProjects);
+
+                dispatch(updateSection({
+                  id: selected.id,
+                  data: newProjects
+                })
+                );
+              }}
+              className="bg-black text-white px-3 py-1 rounded-md text-md">
+              New Project
+            </button>
           </>
         )}
 
