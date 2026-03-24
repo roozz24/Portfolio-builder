@@ -27,8 +27,8 @@ const defaultPortfolio = {
       type: "projects",
       data: [
         {
-          title: "Project 1",
-          description: "Something cool",
+          title: "",
+          description: "",
           link: ""
         }
       ]

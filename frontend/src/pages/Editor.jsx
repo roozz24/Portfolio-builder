@@ -9,9 +9,37 @@ function Editor() {
   const [selected, setSelected] = useState(null);
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
+  const [projects, setProjects] = useState([]);
   const dispatch = useDispatch();
 
   const portfolio = useSelector(state => state.portfolio);
+
+  useEffect(() => {
+    if (selected?.type === "projects") {
+      setProjects(selected.data);
+    }
+  }, [selected]);
+
+  const handleChange = (index, field, value) => {
+    const updated = projects.map((proj, i) => {
+      if (i === index) {
+        return {
+          ...proj,
+          [field]: value
+        };
+      }
+      return proj;
+    });
+
+    setProjects(updated);
+
+    dispatch(
+      updateSection({
+        id: selected.id,
+        data: updated
+      })
+    );
+  };
 
   return (
     <div className="flex h-screen">
@@ -79,6 +107,32 @@ function Editor() {
               }}
               className="border p-2 mb-2 w-full"
             />
+          </>
+        )}
+
+        {selected?.type === "projects" && (
+          <>
+            {projects.map((proj, index) => (
+              <div key={index} className="mb-4 border p-2">
+
+                <input
+                  type="text"
+                  placeholder="Project Title"
+                  value={proj.title}
+                  onChange={(e) => handleChange(index, "title", e.target.value)}
+                  className="border p-1 mb-1 w-full"
+                />
+
+                <input
+                  type="text"
+                  placeholder="Project Description"
+                  value={proj.description}
+                  onChange={(e) => handleChange(index, "description", e.target.value)}
+                  className="border p-1 mb-1 w-full"
+                />
+
+              </div>
+            ))}
           </>
         )}
 
