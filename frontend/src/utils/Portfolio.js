@@ -8,7 +8,7 @@ const defaultPortfolio = {
   sections: [
     {
       id: "hero-1",
-      type: "hero",
+      type: "Hero",
       data: {
         name: "Your Name",
         title: "React Developer",
@@ -17,14 +17,14 @@ const defaultPortfolio = {
     },
     {
       id: "about-1",
-      type: "about",
+      type: "About",
       data: {
         description: "Write about yourself"
       }
     },
     {
       id: "projects-1",
-      type: "projects",
+      type: "Projects",
       data: [
         {
           title: "",
@@ -35,7 +35,7 @@ const defaultPortfolio = {
     },
     {
       id: "skills-1",
-      type: "skills",
+      type: "Skills",
       data: [""]
     }
   ]

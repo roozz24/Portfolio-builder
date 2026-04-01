@@ -10,6 +10,12 @@ const portfolioSlice = createSlice({
     },
     updateSection: (state, action) => {
       const { id, data } = action.payload;
+
+      if(id === "sections") {
+        state.sections = data;
+        return;
+      }
+
       const section = state.sections.find(sec => sec.id === id);
       if (section) {
         section.data = data;
