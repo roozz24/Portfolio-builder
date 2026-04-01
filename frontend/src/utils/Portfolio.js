@@ -36,7 +36,7 @@ const defaultPortfolio = {
     {
       id: "skills-1",
       type: "skills",
-      data: ["React", "JavaScript"]
+      data: [""]
     }
   ]
 };

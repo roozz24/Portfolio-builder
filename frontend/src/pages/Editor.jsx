@@ -10,6 +10,7 @@ function Editor() {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [projects, setProjects] = useState([]);
+  const [skills, setSkills] = useState([]);
   const dispatch = useDispatch();
 
   const portfolio = useSelector(state => state.portfolio);
@@ -17,6 +18,9 @@ function Editor() {
   useEffect(() => {
     if (selected?.type === "projects") {
       setProjects(selected.data);
+    }
+    if (selected?.type === "skills") {
+      setSkills(selected.data);
     }
   }, [selected]);
 
@@ -39,6 +43,50 @@ function Editor() {
         data: updated
       })
     );
+  };
+
+  const handleDelete = (index) => {
+    const updated = projects.filter((_, i) => i !== index);
+
+    setProjects(updated);
+
+    dispatch(updatedSection({
+        id: selected.id,
+        data: updated
+      }));
+  };
+
+  const handleSkillChange = (index, value) => {
+    const updated = skills.map((s, i) =>
+      i === index ? value : s
+    );
+
+    setSkills(updated);
+
+    dispatch(updateSection({
+      id: selected.id,
+      data: updated
+    }));
+  };
+
+  const handleAddSkill = () => {
+    const updated = [...skills, ""];
+    setSkills(updated);
+
+    dispatch(updateSection({
+      id: selected.id,
+      data: updated
+    }));
+  };
+
+  const handleDeleteSkill = (index) => {
+    const updated = skills.filter((_, i) => i !== index);
+    setSkills(updated);
+
+    dispatch(updateSection({
+      id: selected.id,
+      data: updated
+    }));
   };
 
   return (
@@ -113,7 +161,11 @@ function Editor() {
         {selected?.type === "projects" && (
           <>
             {projects.map((proj, index) => (
-              <div key={index} className="mb-4 border p-2">
+              <div key={index} className="mb-5 border p-3 rounded flex flex-col">
+
+                <h3 className="font-semibold mb-2">
+                  Project {index + 1}
+                </h3>
 
                 <input
                   type="text"
@@ -131,8 +183,17 @@ function Editor() {
                   className="border p-1 mb-1 w-full"
                 />
 
+                <div>
+                  <button
+                    onClick={() => handleDelete(index)}
+                    className="bg-red-500 text-white rounded-md px-2 py-1 mt-2">
+                    Delete
+                  </button>
+                </div>
+
               </div>
             ))}
+
             <button
               onClick={() => {
                 const newProjects = [
@@ -147,8 +208,41 @@ function Editor() {
                 })
                 );
               }}
-              className="bg-black text-white px-3 py-1 rounded-md text-md">
-              New Project
+              className="bg-black text-white px-3 py-1 rounded-md">
+              Add Project
+            </button>
+
+          </>
+        )}
+
+        {selected?.type === "skills" && (
+          <>
+            {skills.map((skill, index) => (
+              <div key={index} className="mb-2 flex gap-2">
+
+                <input
+                  type="text"
+                  value={skill}
+                  placeholder="eg; react, JavaScript"
+                  onChange={(e) => handleSkillChange(index, e.target.value)}
+                  className="border p-2 w-full"
+                />
+
+                <button
+                  onClick={() => handleDeleteSkill(index)}
+                  className="bg-red-500 text-white px-2"
+                >
+                  X
+                </button>
+
+              </div>
+            ))}
+
+            <button
+              onClick={handleAddSkill}
+              className="bg-black text-white px-3 py-1"
+            >
+              Add Skill
             </button>
           </>
         )}
@@ -165,6 +259,19 @@ function Editor() {
           }
           if (sec.type === "about") {
             return <div key={sec.id}>{sec.data.description}</div>;
+          }
+          if (sec.type === "projects") {
+            return (
+              <div key={sec.id}>
+                <h2 className="font-bold mb-2">Projects</h2>
+                {sec.data.map((proj, i) => (
+                  <div key={i} className="mb-2">
+                    <p className="font-semibold">{proj.title}</p>
+                    <p className="text-sm">{proj.description}</p>
+                  </div>
+                ))}
+              </div>
+            );
           }
           return null;
         })}
