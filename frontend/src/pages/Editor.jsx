@@ -7,6 +7,10 @@ import { DndContext, closestCenter } from "@dnd-kit/core";
 import { SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable";
 import { arrayMove } from "@dnd-kit/sortable";
 import SortableItem from "../components/sortableItem";
+import { db } from "../firebase/firebase";
+import { doc, setDoc } from "firebase/firestore";
+import { useParams } from "react-router-dom";
+import { getDoc } from "firebase/firestore";
 
 function Editor() {
 
@@ -16,8 +20,24 @@ function Editor() {
   const [projects, setProjects] = useState([]);
   const [skills, setSkills] = useState([]);
   const dispatch = useDispatch();
+  const { id } = useParams();
 
   const portfolio = useSelector(state => state.portfolio);
+
+  useEffect(() => {
+    const loadPortfolio = async () => {
+      const docRef = doc(db, "portfolios", id);
+      const docSnap = await getDoc(docRef);
+
+      if (docSnap.exists()) {
+        dispatch(setPortfolio(docSnap.data()));
+      } else {
+        dispatch(setPortfolio(defaultPortfolio));
+      }
+    };
+
+    loadPortfolio();
+  }, [id]);
 
   useEffect(() => {
     if (selected?.type === "projects") {
@@ -96,7 +116,7 @@ function Editor() {
   const handleDragEnd = (event) => {
     const { active, over } = event;
 
-    if(!over) return;
+    if (!over) return;
 
     if (active.id !== over.id) {
       const oldIndex = portfolio.sections.findIndex(s => s.id === active.id);
@@ -110,6 +130,19 @@ function Editor() {
       }));
     }
   };
+
+  const handleSave = async () => {
+    console.log("ID:", id);
+    console.log("DB:", db);
+    try {
+      await setDoc(doc(db, "portfolios", id), portfolio);
+      console.log("Saved portfolio:");
+      alert("Saved successfully");
+    } catch (err) {
+      console.error(err);
+    }
+  };
+  
 
   return (
     <div className="flex h-screen">
@@ -132,6 +165,13 @@ function Editor() {
       {/* Editor Panel */}
       <div className="w-2/5 p-4 border-l border-r">
         <h2 className="font-bold mb-4">Editor</h2>
+
+        <button
+          onClick={handleSave}
+          className="bg-green-600 text-white px-4 py-2 mb-4 rounded-md"
+        >
+          Save Portfolio
+        </button><br />
 
         {!selected && <p>Select a section</p>}
 
